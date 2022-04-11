@@ -22,4 +22,5 @@ AI_PIECE = 2
 WINDOW_LENGTH = 4
 
 def create_board():
-  board = np.zeros((ROW_COUNT,COLUMN_COUNT)) return board
+  board = np.zeros((ROW_COUNT,COLUMN_COUNT))
+  return board
