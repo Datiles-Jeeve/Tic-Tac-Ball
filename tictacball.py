@@ -175,3 +175,4 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
 		return best_col
 
 
+
