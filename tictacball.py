@@ -24,3 +24,6 @@ WINDOW_LENGTH = 4
 def create_board():
   board = np.zeros((ROW_COUNT,COLUMN_COUNT))
   return board
+
+def drop_piece(board, row, col, piece):
+	board[row][col] = piece
