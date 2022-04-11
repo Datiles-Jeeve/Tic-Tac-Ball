@@ -27,3 +27,7 @@ def create_board():
 
 def drop_piece(board, row, col, piece):
 	board[row][col] = piece
+
+def is_valid_location(board, col):
+	return board[ROW_COUNT-1][col] == 0
+
