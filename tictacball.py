@@ -223,6 +223,8 @@ while not game_over:
 		if turn == PLAYER:
 			pygame.draw.circle (screen, RED, (posx, int(SQUARESIZE/2)), RADIUS)
 				
+	pygame.display.update()
+				
 				
 
 				
