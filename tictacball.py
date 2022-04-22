@@ -230,7 +230,16 @@ while not game_over:
 				
 	if turn == PLAYER:
 		posx = event.pos[0]
-		col = int(math.floor(posx/SQUARESIZE))		
+		col = int(math.floor(posx/SQUARESIZE))
+				
+		if is_valid_location(board, col):
+			row = get_next_open_row(board, col)
+			drop_piece(board, row, col, PLAYER_PIECE)
+				
+			if winning_move(board, PLAYER_PIECE):
+				label = myfont.render("Player 1 wins!!", 1, RED)
+				screen.blit(label, (40, 10))
+				game_over = True
 				
 				
 
