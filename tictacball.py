@@ -241,6 +241,12 @@ while not game_over:
 				screen.blit(label, (40, 10))
 				game_over = True
 				
+			turn += 1
+			turn = turn % 2
+				
+			print_board(board)
+				
+			draw_board(board)	
 				
 
 				
