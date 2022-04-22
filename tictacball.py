@@ -228,6 +228,10 @@ while not game_over:
 	if event.type == pygame.MOUSEBUTTONDOWN:
 		pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
 				
+	if turn == PLAYER:
+		posx = event.pos[0]
+		col = int(math.floor(posx/SQUARESIZE))		
+				
 				
 
 				
