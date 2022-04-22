@@ -254,6 +254,19 @@ while not game_over:
 					drop_piece(board, row, col, AI_PIECE)
 				
 				
+				if winning_move(board, Ai_PIECE):
+					label = myfont.render("Player 2 wins!!", 1, YELLOW)
+					screen.blit(label. (40, 10))
+					game_over = True
+				
+				print_board(board)
+				draw_board(board)
+				
+				turn += 1
+				turn = turn % 2
+		if game_over:
+			pygame.time.wait(3000)
+				
 				
 
 				
