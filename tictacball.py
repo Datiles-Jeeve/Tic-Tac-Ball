@@ -17,9 +17,11 @@ pygame.display.set_caption("TicTac Ball")
 black = (0, 0, 0)
 white = (255, 255, 255)
 
+
 pygame.mixer.music.load('audio/main.mp3')
 pygame.mixer.music.set_volume(0.4)
 pygame.mixer.music.play(-1)
+
 
 clock = pygame.time.Clock()
 FPS = 60
@@ -27,12 +29,16 @@ FPS = 60
 BG = pygame.image.load("assets/bg.png")
 
 
-def get_font(size):
+def get_font(size):  
     return pygame.font.Font("assets/burbank.otf", size)
+
+
 
 smallFont = pygame.font.Font("assets/burbank.otf", 25)
 medFont = pygame.font.Font("assets/burb.ttf", 40)
 largeFont = pygame.font.Font("assets/burbank.otf", 100)
+
+
 
 def text_objects(text, color, size):
     if size == "small":
@@ -43,10 +49,14 @@ def text_objects(text, color, size):
         textSurface = largeFont.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
+
+
 def message_to_screen(msg, color, y_displace=0, size="small"):
     textSurf, textRect = text_objects(msg, color, size)
     textRect.center = (int(SCREEN_WIDTH/2.3), (int(SCREEN_HEIGHT / 2.1) + y_displace))
     SCREEN.blit(textSurf, textRect)
+
+
 
 def play():
     pause = False
@@ -56,7 +66,7 @@ def play():
         player.play()
         player.set_volume(0.2)
         mixer.music.stop()
-	
+
         BLUE = (0, 0, 255)
         BLACK = (0, 0, 0)
         RED = (255, 0, 0)
@@ -66,7 +76,7 @@ def play():
 
         ROW_COUNT = 6
         COLUMN_COUNT = 7
-	
+
         PLAYER = 0
         AI = 1
 
@@ -75,9 +85,9 @@ def play():
         AI_PIECE = 2
 
         WINDOW_LENGTH = 4
-	
-	def create_board():
-	    board = np.zeros((ROW_COUNT, COLUMN_COUNT))
+
+        def create_board():
+            board = np.zeros((ROW_COUNT, COLUMN_COUNT))
             return board
 
         def drop_piece(board, row, col, piece):
@@ -90,35 +100,44 @@ def play():
             for r in range(ROW_COUNT):
                 if board[r][col] == 0:
                     return r
-		def print_board(board):
+
+
+
+        def print_board(board):
             print(np.flip(board, 0))
 
         def winning_move(board, piece):
-			for c in range(COLUMN_COUNT - 3):
+            
+            for c in range(COLUMN_COUNT - 3):
                 for r in range(ROW_COUNT):
                     if board[r][c] == piece and board[r][c + 1] == piece and board[r][c + 2] == piece and board[r][
                         c + 3] == piece:
                         return True
-		
-			for c in range(COLUMN_COUNT):
+
+            
+            for c in range(COLUMN_COUNT):
                 for r in range(ROW_COUNT - 3):
                     if board[r][c] == piece and board[r + 1][c] == piece and board[r + 2][c] == piece and board[r + 3][
                         c] == piece:
                         return True
-		
-			for c in range(COLUMN_COUNT - 3):
+
+            
+            for c in range(COLUMN_COUNT - 3):
                 for r in range(ROW_COUNT - 3):
                     if board[r][c] == piece and board[r + 1][c + 1] == piece and board[r + 2][c + 2] == piece and \
                             board[r + 3][c + 3] == piece:
                         return True
-		
-			for c in range(COLUMN_COUNT - 3):
+
+            
+            for c in range(COLUMN_COUNT - 3):
                 for r in range(3, ROW_COUNT):
                     if board[r][c] == piece and board[r - 1][c + 1] == piece and board[r - 2][c + 2] == piece and \
                             board[r - 3][c + 3] == piece:
                         return True
-		
-		def evaluate_window(window, piece):
+
+
+
+        def evaluate_window(window, piece):
             score = 0
             opp_piece = PLAYER_PIECE
             if piece == PLAYER_PIECE:
@@ -136,39 +155,46 @@ def play():
 
             return score
 
-		def score_position(board, piece):
+
+
+        def score_position(board, piece):
             score = 0
 
-		center_array = [int(i) for i in list(board[:, COLUMN_COUNT // 2])]
-        center_count = center_array.count(piece)
-        score += center_count * 3
-		
-		for r in range(ROW_COUNT):
-            row_array = [int(i) for i in list(board[r, :])]
-            for c in range(COLUMN_COUNT - 3):
-                window = row_array[c:c + WINDOW_LENGTH]
-                score += evaluate_window(window, piece)
-			
-		for c in range(COLUMN_COUNT):
+            
+            center_array = [int(i) for i in list(board[:, COLUMN_COUNT // 2])]
+            center_count = center_array.count(piece)
+            score += center_count * 3
+
+            
+            for r in range(ROW_COUNT):
+                row_array = [int(i) for i in list(board[r, :])]
+                for c in range(COLUMN_COUNT - 3):
+                    window = row_array[c:c + WINDOW_LENGTH]
+                    score += evaluate_window(window, piece)
+
+            
+            for c in range(COLUMN_COUNT):
                 col_array = [int(i) for i in list(board[:, c])]
                 for r in range(ROW_COUNT - 3):
                     window = col_array[r:r + WINDOW_LENGTH]
                     score += evaluate_window(window, piece)
-			
-		for r in range(ROW_COUNT - 3):
-            for c in range(COLUMN_COUNT - 3):
-                window = [board[r + i][c + i] for i in range(WINDOW_LENGTH)]
-                score += evaluate_window(window, piece)
-			
-		for r in range(ROW_COUNT - 3):
-            for c in range(COLUMN_COUNT - 3):
-                window = [board[r + 3 - i][c + i] for i in range(WINDOW_LENGTH)]
-                score += evaluate_window(window, piece)
 
-        return score
+            
+            for r in range(ROW_COUNT - 3):
+                for c in range(COLUMN_COUNT - 3):
+                    window = [board[r + i][c + i] for i in range(WINDOW_LENGTH)]
+                    score += evaluate_window(window, piece)
+
+            for r in range(ROW_COUNT - 3):
+                for c in range(COLUMN_COUNT - 3):
+                    window = [board[r + 3 - i][c + i] for i in range(WINDOW_LENGTH)]
+                    score += evaluate_window(window, piece)
+
+            return score
 
 
-	def is_terminal_node(board):
+
+        def is_terminal_node(board):
             return winning_move(board, PLAYER_PIECE) or winning_move(board, AI_PIECE) or len(
                 get_valid_locations(board)) == 0
 
@@ -200,8 +226,11 @@ def play():
                     if alpha >= beta:
                         break
                 return column, value
-	else:
-	    value = math.inf
+
+
+
+            else: 
+                value = math.inf
                 column = random.choice(valid_locations)
                 for col in valid_locations:
                     row = get_next_open_row(board, col)
@@ -237,9 +266,11 @@ def play():
                     best_score = score
                     best_col = col
 
-            return best_col	
+            return best_col
 
-	def draw_board(board):
+
+
+        def draw_board(board):
             for c in range(COLUMN_COUNT):
                 for r in range(ROW_COUNT):
                     pygame.draw.rect(screen, gray,
@@ -247,7 +278,8 @@ def play():
                     pygame.draw.circle(screen, BLACK, (
                         int(c * SQUARESIZE + SQUARESIZE / 2), int(r * SQUARESIZE + SQUARESIZE + SQUARESIZE / 2)),
                                        RADIUS)
-	    for c in range(COLUMN_COUNT):
+
+            for c in range(COLUMN_COUNT):
                 for r in range(ROW_COUNT):
                     if board[r][c] == PLAYER_PIECE:
                         pygame.draw.circle(screen, BLUE, (
@@ -257,13 +289,15 @@ def play():
                         pygame.draw.circle(screen, ORANGE, (
                             int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)),
                                            RADIUS)
-			
-			plyr = mixer.Sound('audio/sound.mp3')
+                        plyr = mixer.Sound('audio/sound.mp3')
                         plyr.play()
 
             pygame.display.update()
 
-board = create_board()
+
+
+
+        board = create_board()
         print_board(board)
         game_over = False
 
@@ -276,7 +310,7 @@ board = create_board()
 
         size = (width, height)
 
-        RADIUS = int(SQUARESIZE / 2 - 5)	
+        RADIUS = int(SQUARESIZE / 2 - 5)
 
         screen = pygame.display.set_mode(size)
         draw_board(board)
@@ -285,8 +319,11 @@ board = create_board()
         myfont = pygame.font.SysFont("monospace", 75)
 
         turn = random.randint(PLAYER, AI)
-	
-	while not game_over:
+
+
+
+
+        while not game_over:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -299,14 +336,17 @@ board = create_board()
                         pygame.draw.circle(screen, BLUE, (posx, int(SQUARESIZE / 2)), RADIUS)
 
                 pygame.display.update()
-		
-		 if event.type == pygame.QUIT:
+
+
+
+
+                if event.type == pygame.QUIT:
                     gameExit = True
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         paused = True
-			while paused:
+                        while paused:
                             SCREEN.fill("#000814")
                             message_to_screen("Paused", white, -120, size="large")
                             message_to_screen("Press C to continue or Q to Quit", white, size="medium")
@@ -314,7 +354,7 @@ board = create_board()
                                 if event.type == pygame.QUIT:
                                     pygame.quit()
                                     quit()
-				if event.type == pygame.KEYDOWN:
+                                if event.type == pygame.KEYDOWN:
                                     if event.key == pygame.K_c:
                                         paused = False
                                         pygame.display.update()
@@ -324,15 +364,16 @@ board = create_board()
                                     elif event.key == pygame.K_q:
                                         pygame.quit()
                                         quit()
-					
-				pygame.display.update()
+
+                                pygame.display.update()
                                 clock.tick
+
 
 
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
-		
+                    
                     if turn == PLAYER:
                         posx = event.pos[0]
                         col = int(math.floor(posx / SQUARESIZE))
@@ -351,12 +392,18 @@ board = create_board()
 
                             print_board(board)
                             draw_board(board)
-				
+
+
+
+
+            
             if turn == AI and not game_over:
 
+                
                 col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
 
                 if is_valid_location(board, col):
+                   
                     row = get_next_open_row(board, col)
                     drop_piece(board, row, col, AI_PIECE)
 
@@ -373,24 +420,29 @@ board = create_board()
 
             if game_over:
                 pygame.time.wait(3000)
-		
+
+
+
+
 def main_menu():
     while True:
         SCREEN.blit(BG, (0, 0))
-	
-	MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
 
         MENU_TEXT = get_font(120).render("TicTac Ball", True, "#ca6702")
         MENU_RECT = MENU_TEXT.get_rect(center=(400, 150))
-	
-	PLAY_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 340),
+
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 340),
                              text_input="PLAY", font=get_font(60), base_color="#d7fcd4", hovering_color="#6c757d")
         QUIT_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 490),
                              text_input="QUIT", font=get_font(60), base_color="#d7fcd4", hovering_color="#6c757d")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
-	
-	for button in [PLAY_BUTTON, QUIT_BUTTON]:
+
+
+
+        for button in [PLAY_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
 
