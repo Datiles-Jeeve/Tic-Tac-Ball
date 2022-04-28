@@ -33,6 +33,17 @@ smallFont = pygame.font.Font("assets/burbank.otf", 25)
 medFont = pygame.font.Font("assets/burb.ttf", 40)
 largeFont = pygame.font.Font("assets/burbank.otf", 100)
 
+def text_objects(text, color, size):
+    if size == "small":
+        textSurface = smallFont.render(text, True, color)
+    elif size == "medium":
+        textSurface = medFont.render(text, True, color)
+    elif size == "large":
+        textSurface = largeFont.render(text, True, color)
+    return textSurface, textSurface.get_rect()
+
+
+
 
 
 def create_board():
