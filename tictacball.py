@@ -263,7 +263,20 @@ def play():
 
             pygame.display.update()
 
-	
+board = create_board()
+        print_board(board)
+        game_over = False
+
+        pygame.init()
+
+        SQUARESIZE = 100
+
+        width = COLUMN_COUNT * SQUARESIZE
+        height = (ROW_COUNT + 1) * SQUARESIZE
+
+        size = (width, height)
+
+        RADIUS = int(SQUARESIZE / 2 - 5)	
 
 
     
@@ -276,29 +289,7 @@ def play():
 	
 	
 	
-				
-board = create_board()
-print_board(board)
-game_over = False
-
-pygame.init()
-
-SQUARESIZE = 100
-
-width = COLUMN_COUNT * SQUARESIZE
-height = (ROW_COUNT+1) * SQUARESIZE
-
-size = (width, height)
-
-RADIUS = int(SQUARESIZE/2 - 5)
-
-screen = pygame.display.set_mode(size)
-draw_board(board)
-pygame.display.update()
-
-myfont = pygame.font.SysFont("monospace", 75)
-
-turn = random.randint(PLAYER, AI)
+			
 
 while not game_over:
 	
