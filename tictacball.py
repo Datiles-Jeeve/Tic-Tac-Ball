@@ -29,6 +29,12 @@ BG = pygame.image.load("assets/bg.png")
 def get_font(size):
     return pygame.font.Font("assets/burbank.otf", size)
 
+smallFont = pygame.font.Font("assets/burbank.otf", 25)
+medFont = pygame.font.Font("assets/burb.ttf", 40)
+largeFont = pygame.font.Font("assets/burbank.otf", 100)
+
+
+
 def create_board():
   board = np.zeros((ROW_COUNT,COLUMN_COUNT))
   return board
