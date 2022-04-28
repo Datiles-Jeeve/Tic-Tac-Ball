@@ -57,7 +57,7 @@ def play():
         player.set_volume(0.2)
         mixer.music.stop()
 	
-		BLUE = (0, 0, 255)
+	BLUE = (0, 0, 255)
         BLACK = (0, 0, 0)
         RED = (255, 0, 0)
         YELLOW = (255, 255, 0)
