@@ -299,3 +299,10 @@ board = create_board()
                         pygame.draw.circle(screen, BLUE, (posx, int(SQUARESIZE / 2)), RADIUS)
 
                 pygame.display.update()
+		
+		 if event.type == pygame.QUIT:
+                    gameExit = True
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        paused = True
