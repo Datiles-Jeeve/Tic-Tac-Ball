@@ -56,6 +56,12 @@ def play():
         player.set_volume(0.2)
         mixer.music.stop()
 	
+	BLUE = (0, 0, 255)
+        BLACK = (0, 0, 0)
+        RED = (255, 0, 0)
+        YELLOW = (255, 255, 0)
+        gray = (206, 212, 218)
+        ORANGE = (202, 103, 2)
 	
 
 def print_board(board):
