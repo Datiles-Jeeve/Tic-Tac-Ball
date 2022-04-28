@@ -21,6 +21,12 @@ pygame.mixer.music.load('audio/main.mp3')
 pygame.mixer.music.set_volume(0.4)
 pygame.mixer.music.play(-1)
 
+clock = pygame.time.Clock()
+FPS = 60
+
+BG = pygame.image.load("assets/bg.png")
+###########################
+
 BLUE = (0,0,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
