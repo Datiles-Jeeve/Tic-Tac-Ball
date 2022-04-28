@@ -257,7 +257,11 @@ def play():
                         pygame.draw.circle(screen, ORANGE, (
                             int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)),
                                            RADIUS)
-		
+			
+			plyr = mixer.Sound('audio/sound.mp3')
+                        plyr.play()
+
+            pygame.display.update()
 
 	
 
