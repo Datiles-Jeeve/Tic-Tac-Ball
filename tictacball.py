@@ -25,7 +25,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 BG = pygame.image.load("assets/bg.png")
-###########################
+###########################tictacball
 
 BLUE = (0,0,255)
 BLACK = (0,0,0)
