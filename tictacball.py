@@ -63,6 +63,18 @@ def play():
         gray = (206, 212, 218)
         ORANGE = (202, 103, 2)
 	
+	ROW_COUNT = 6
+        COLUMN_COUNT = 7
+
+        PLAYER = 0
+        AI = 1
+
+        EMPTY = 0
+        PLAYER_PIECE = 1
+        AI_PIECE = 2
+
+        WINDOW_LENGTH = 4
+	
 
 def print_board(board):
 	print(np.flip(board, 0))
