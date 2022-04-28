@@ -326,7 +326,31 @@ board = create_board()
                                         quit()
 					
 				pygame.display.update()
-                                clock.tick	
+                                clock.tick
+
+
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
+		
+                    if turn == PLAYER:
+                        posx = event.pos[0]
+                        col = int(math.floor(posx / SQUARESIZE))
+
+                        if is_valid_location(board, col):
+                            row = get_next_open_row(board, col)
+                            drop_piece(board, row, col, PLAYER_PIECE)
+
+                            if winning_move(board, PLAYER_PIECE):
+                                label = get_font(45).render("Player 1 wins!!", True, YELLOW)
+                                screen.blit(label, (270, 30))
+                                game_over = True
+
+                            turn += 1
+                            turn = turn % 2
+
+                            print_board(board)
+                            draw_board(board)
 				
 				
 
