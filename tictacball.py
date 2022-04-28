@@ -324,7 +324,11 @@ board = create_board()
                                     elif event.key == pygame.K_q:
                                         pygame.quit()
                                         quit()
-
+					
+				pygame.display.update()
+                                clock.tick	
+				
+				
 
 				
 			 
