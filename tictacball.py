@@ -42,6 +42,12 @@ def text_objects(text, color, size):
         textSurface = largeFont.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
+def message_to_screen(msg, color, y_displace=0, size="small"):
+    textSurf, textRect = text_objects(msg, color, size)
+    textRect.center = (int(SCREEN_WIDTH/2.3), (int(SCREEN_HEIGHT / 2.1) + y_displace))
+    SCREEN.blit(textSurf, textRect)
+
+
 
 
 
