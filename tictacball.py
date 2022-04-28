@@ -314,4 +314,17 @@ board = create_board()
                                 if event.type == pygame.QUIT:
                                     pygame.quit()
                                     quit()
+				if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_c:
+                                        paused = False
+                                        pygame.display.update()
+                                        clock.tick
+                                        draw_board(board)
+                                        pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
+                                    elif event.key == pygame.K_q:
+                                        pygame.quit()
+                                        quit()
+
+
+				
 			 
