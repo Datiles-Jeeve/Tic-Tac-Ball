@@ -278,7 +278,13 @@ board = create_board()
 
         RADIUS = int(SQUARESIZE / 2 - 5)	
 
+        screen = pygame.display.set_mode(size)
+        draw_board(board)
+        pygame.display.update()
 
+        myfont = pygame.font.SysFont("monospace", 75)
+
+        turn = random.randint(PLAYER, AI)
     
 			
 
