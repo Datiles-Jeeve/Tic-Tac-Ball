@@ -1,8 +1,10 @@
 import numpy as np
 import random
-import pygame
 import sys
 import math
+import pygame
+from button import Button
+from pygame import mixer
 
 BLUE = (0,0,255)
 BLACK = (0,0,0)
@@ -260,7 +262,7 @@ while not game_over:
 					game_over = True
 				
 				print_board(board)
-				draw_board(board)
+				draw _board(board)
 				
 				turn += 1
 				turn = turn % 2
