@@ -352,6 +352,27 @@ board = create_board()
                             print_board(board)
                             draw_board(board)
 				
+            if turn == AI and not game_over:
+
+                col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
+
+                if is_valid_location(board, col):
+                    row = get_next_open_row(board, col)
+                    drop_piece(board, row, col, AI_PIECE)
+
+                    if winning_move(board, AI_PIECE):
+                        label = get_font(45).render("Player 2 wins!!", True, YELLOW)
+                        screen.blit(label, (270, 30))
+                        game_over = True
+
+                    print_board(board)
+                    draw_board(board)
+
+                    turn += 1
+                    turn = turn % 2
+
+            if game_over:
+                pygame.time.wait(3000)
 				
 
 				
