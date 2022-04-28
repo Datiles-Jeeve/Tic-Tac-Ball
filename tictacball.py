@@ -306,3 +306,12 @@ board = create_board()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         paused = True
+			while paused:
+                            SCREEN.fill("#000814")
+                            message_to_screen("Paused", white, -120, size="large")
+                            message_to_screen("Press C to continue or Q to Quit", white, size="medium")
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    quit()
+			 
