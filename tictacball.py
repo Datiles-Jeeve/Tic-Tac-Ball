@@ -14,6 +14,13 @@ SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("TicTac Ball")
 
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+pygame.mixer.music.load('audio/main.mp3')
+pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.play(-1)
+
 BLUE = (0,0,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
