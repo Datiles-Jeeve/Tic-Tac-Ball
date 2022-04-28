@@ -47,25 +47,12 @@ def message_to_screen(msg, color, y_displace=0, size="small"):
     textRect.center = (int(SCREEN_WIDTH/2.3), (int(SCREEN_HEIGHT / 2.1) + y_displace))
     SCREEN.blit(textSurf, textRect)
 
+def play():
+    pause = False
+    while True:
 
 
 
-
-
-def create_board():
-  board = np.zeros((ROW_COUNT,COLUMN_COUNT))
-  return board
-
-def drop_piece(board, row, col, piece):
-	board[row][col] = piece
-
-def is_valid_location(board, col):
-	return board[ROW_COUNT-1][col] == 0
-
-def get_next_open_row(board, col):
-	for r in range(ROW_COUNT):
-		if board[r][col] == 0:
-		   return r
 def print_board(board):
 	print(np.flip(board, 0))
 
