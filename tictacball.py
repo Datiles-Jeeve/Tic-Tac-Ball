@@ -51,7 +51,12 @@ def play():
     pause = False
     while True:
 
-
+        player = mixer.Sound('audio/play.mp3')
+        player.play()
+        player.set_volume(0.2)
+        mixer.music.stop()
+	
+	
 
 def print_board(board):
 	print(np.flip(board, 0))
