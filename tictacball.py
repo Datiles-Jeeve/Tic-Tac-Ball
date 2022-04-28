@@ -8,6 +8,9 @@ from pygame import mixer
 
 pygame.init()
 
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
+
 BLUE = (0,0,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
