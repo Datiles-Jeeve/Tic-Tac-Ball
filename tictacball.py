@@ -382,6 +382,16 @@ def main_menu():
 
         MENU_TEXT = get_font(120).render("TicTac Ball", True, "#ca6702")
         MENU_RECT = MENU_TEXT.get_rect(center=(400, 150))
+	
+	PLAY_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 340),
+                             text_input="PLAY", font=get_font(60), base_color="#d7fcd4", hovering_color="#6c757d")
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 490),
+                             text_input="QUIT", font=get_font(60), base_color="#d7fcd4", hovering_color="#6c757d")
+
+        SCREEN.blit(MENU_TEXT, MENU_RECT)
+
+
+
 
         
 				
