@@ -16,6 +16,7 @@ pygame.display.set_caption("TicTac Ball")
 
 black = (0, 0, 0)
 white = (255, 255, 255)
+green = (0, 128, 0)
 
 
 pygame.mixer.music.load('audio/main.mp3')
@@ -27,17 +28,27 @@ clock = pygame.time.Clock()
 FPS = 60
 
 BG = pygame.image.load("assets/bg.png")
+GB = pygame.image.load("assets/Background.png")
 
 
 def get_font(size):  
-    return pygame.font.Font("assets/burbank.otf", size)
+    return pygame.font.Font("assets/burbank.otf", size)   
+def frostbite(size):
+    return pygame.font.Font("assets/frosbite_b.ttf", size)
 
 
 
+
+frostbite_n = pygame.font.Font("assets/frostbite_n.ttf", 20) 
+frostbite_w = pygame.font.Font("assets/frostbite_w.ttf", 20)   
+frostbite_wb = pygame.font.Font("assets/frostbite_wb.ttf", 55)
 smallFont = pygame.font.Font("assets/burbank.otf", 25)
 medFont = pygame.font.Font("assets/burb.ttf", 40)
 largeFont = pygame.font.Font("assets/burbank.otf", 100)
-
+font = pygame.font.SysFont("none", 30)
+myfont = pygame.font.SysFont("none", 25)
+my_font = pygame.font.SysFont("monospace", 14)
+f_ont = pygame.font.SysFont("none", 45)
 
 
 def text_objects(text, color, size):
@@ -47,6 +58,10 @@ def text_objects(text, color, size):
         textSurface = medFont.render(text, True, color)
     elif size == "large":
         textSurface = largeFont.render(text, True, color)
+    elif size == "frostbite_":
+        textSurface = frostbite_wb.render(text, True, color)    
+    elif size == "frost_":
+        textSurface = f_ont.render(text, True, color)      
     return textSurface, textSurface.get_rect()
 
 
@@ -62,12 +77,8 @@ def play():
     pause = False
     while True:
 
-        player = mixer.Sound('audio/play.mp3')
-        player.play()
-        player.set_volume(0.2)
-        mixer.music.stop()
-
         BLUE = (0, 0, 255)
+        WHITE = (255, 255, 25)
         BLACK = (0, 0, 0)
         RED = (255, 0, 0)
         YELLOW = (255, 255, 0)
@@ -77,251 +88,88 @@ def play():
         ROW_COUNT = 6
         COLUMN_COUNT = 7
 
-        PLAYER = 0
-        AI = 1
-
-        EMPTY = 0
-        PLAYER_PIECE = 1
-        AI_PIECE = 2
-
-        WINDOW_LENGTH = 4
-
         def create_board():
-            board = np.zeros((ROW_COUNT, COLUMN_COUNT))
+            board = np.zeros((ROW_COUNT,COLUMN_COUNT))
             return board
 
         def drop_piece(board, row, col, piece):
             board[row][col] = piece
 
         def is_valid_location(board, col):
-            return board[ROW_COUNT - 1][col] == 0
+            return board[ROW_COUNT-1][col] == 0
 
         def get_next_open_row(board, col):
             for r in range(ROW_COUNT):
                 if board[r][col] == 0:
                     return r
 
-
-
         def print_board(board):
             print(np.flip(board, 0))
 
         def winning_move(board, piece):
-            
-            for c in range(COLUMN_COUNT - 3):
+            # Check horizontal locations for win
+            for c in range(COLUMN_COUNT-3):
                 for r in range(ROW_COUNT):
-                    if board[r][c] == piece and board[r][c + 1] == piece and board[r][c + 2] == piece and board[r][
-                        c + 3] == piece:
+                    if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
                         return True
 
-            
+            # Check vertical locations for win
             for c in range(COLUMN_COUNT):
-                for r in range(ROW_COUNT - 3):
-                    if board[r][c] == piece and board[r + 1][c] == piece and board[r + 2][c] == piece and board[r + 3][
-                        c] == piece:
+                for r in range(ROW_COUNT-3):
+                    if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
                         return True
 
-            
-            for c in range(COLUMN_COUNT - 3):
-                for r in range(ROW_COUNT - 3):
-                    if board[r][c] == piece and board[r + 1][c + 1] == piece and board[r + 2][c + 2] == piece and \
-                            board[r + 3][c + 3] == piece:
+            # Check positively sloped diaganols
+            for c in range(COLUMN_COUNT-3):
+                for r in range(ROW_COUNT-3):
+                    if board[r][c] == piece and board[r+1][c+1] == piece and board[r+2][c+2] == piece and board[r+3][c+3] == piece:
                         return True
 
-            
-            for c in range(COLUMN_COUNT - 3):
+            # Check negatively sloped diaganols
+            for c in range(COLUMN_COUNT-3):
                 for r in range(3, ROW_COUNT):
-                    if board[r][c] == piece and board[r - 1][c + 1] == piece and board[r - 2][c + 2] == piece and \
-                            board[r - 3][c + 3] == piece:
+                    if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
                         return True
-
-
-
-        def evaluate_window(window, piece):
-            score = 0
-            opp_piece = PLAYER_PIECE
-            if piece == PLAYER_PIECE:
-                opp_piece = AI_PIECE
-
-            if window.count(piece) == 4:
-                score += 100
-            elif window.count(piece) == 3 and window.count(EMPTY) == 1:
-                score += 5
-            elif window.count(piece) == 2 and window.count(EMPTY) == 2:
-                score += 2
-
-            if window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
-                score -= 4
-
-            return score
-
-
-
-        def score_position(board, piece):
-            score = 0
-
-            
-            center_array = [int(i) for i in list(board[:, COLUMN_COUNT // 2])]
-            center_count = center_array.count(piece)
-            score += center_count * 3
-
-            
-            for r in range(ROW_COUNT):
-                row_array = [int(i) for i in list(board[r, :])]
-                for c in range(COLUMN_COUNT - 3):
-                    window = row_array[c:c + WINDOW_LENGTH]
-                    score += evaluate_window(window, piece)
-
-            
-            for c in range(COLUMN_COUNT):
-                col_array = [int(i) for i in list(board[:, c])]
-                for r in range(ROW_COUNT - 3):
-                    window = col_array[r:r + WINDOW_LENGTH]
-                    score += evaluate_window(window, piece)
-
-            
-            for r in range(ROW_COUNT - 3):
-                for c in range(COLUMN_COUNT - 3):
-                    window = [board[r + i][c + i] for i in range(WINDOW_LENGTH)]
-                    score += evaluate_window(window, piece)
-
-            for r in range(ROW_COUNT - 3):
-                for c in range(COLUMN_COUNT - 3):
-                    window = [board[r + 3 - i][c + i] for i in range(WINDOW_LENGTH)]
-                    score += evaluate_window(window, piece)
-
-            return score
-
-
-
-        def is_terminal_node(board):
-            return winning_move(board, PLAYER_PIECE) or winning_move(board, AI_PIECE) or len(
-                get_valid_locations(board)) == 0
-
-        def minimax(board, depth, alpha, beta, maximizingPlayer):
-            valid_locations = get_valid_locations(board)
-            is_terminal = is_terminal_node(board)
-            if depth == 0 or is_terminal:
-                if is_terminal:
-                    if winning_move(board, AI_PIECE):
-                        return (None, 100000000000000)
-                    elif winning_move(board, PLAYER_PIECE):
-                        return (None, -10000000000000)
-                    else:  # Game is over, no more valid moves
-                        return (None, 0)
-                else:  # Depth is zero
-                    return (None, score_position(board, AI_PIECE))
-            if maximizingPlayer:
-                value = -math.inf
-                column = random.choice(valid_locations)
-                for col in valid_locations:
-                    row = get_next_open_row(board, col)
-                    b_copy = board.copy()
-                    drop_piece(b_copy, row, col, AI_PIECE)
-                    new_score = minimax(b_copy, depth - 1, alpha, beta, False)[1]
-                    if new_score > value:
-                        value = new_score
-                        column = col
-                    alpha = max(alpha, value)
-                    if alpha >= beta:
-                        break
-                return column, value
-
-
-
-            else: 
-                value = math.inf
-                column = random.choice(valid_locations)
-                for col in valid_locations:
-                    row = get_next_open_row(board, col)
-                    b_copy = board.copy()
-                    drop_piece(b_copy, row, col, PLAYER_PIECE)
-                    new_score = minimax(b_copy, depth - 1, alpha, beta, True)[1]
-                    if new_score < value:
-                        value = new_score
-                        column = col
-                    beta = min(beta, value)
-                    if alpha >= beta:
-                        break
-                return column, value
-
-        def get_valid_locations(board):
-            valid_locations = []
-            for col in range(COLUMN_COUNT):
-                if is_valid_location(board, col):
-                    valid_locations.append(col)
-            return valid_locations
-
-        def pick_best_move(board, piece):
-
-            valid_locations = get_valid_locations(board)
-            best_score = -10000
-            best_col = random.choice(valid_locations)
-            for col in valid_locations:
-                row = get_next_open_row(board, col)
-                temp_board = board.copy()
-                drop_piece(temp_board, row, col, piece)
-                score = score_position(temp_board, piece)
-                if score > best_score:
-                    best_score = score
-                    best_col = col
-
-            return best_col
-
-
 
         def draw_board(board):
             for c in range(COLUMN_COUNT):
                 for r in range(ROW_COUNT):
-                    pygame.draw.rect(screen, gray,
-                                     (c * SQUARESIZE, r * SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE))
-                    pygame.draw.circle(screen, BLACK, (
-                        int(c * SQUARESIZE + SQUARESIZE / 2), int(r * SQUARESIZE + SQUARESIZE + SQUARESIZE / 2)),
-                                       RADIUS)
-
+                    pygame.draw.rect(screen, white, (c*SQUARESIZE, r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
+                    pygame.draw.circle(screen, "#000814", (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+            
             for c in range(COLUMN_COUNT):
-                for r in range(ROW_COUNT):
-                    if board[r][c] == PLAYER_PIECE:
-                        pygame.draw.circle(screen, BLUE, (
-                            int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)),
-                                           RADIUS)
-                    elif board[r][c] == AI_PIECE:
-                        pygame.draw.circle(screen, ORANGE, (
-                            int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)),
-                                           RADIUS)
-                        plyr = mixer.Sound('audio/sound.mp3')
-                        plyr.play()
-
+                for r in range(ROW_COUNT):		
+                    if board[r][c] == 1:
+                        pygame.draw.circle(screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+                    elif board[r][c] == 2: 
+                        pygame.draw.circle(screen, green, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+            player = mixer.Sound('audio/sound.mp3')
+            player.play()
+            player.set_volume(0.2)
             pygame.display.update()
-
-
 
 
         board = create_board()
         print_board(board)
         game_over = False
+        turn = 0
 
         pygame.init()
 
         SQUARESIZE = 100
 
         width = COLUMN_COUNT * SQUARESIZE
-        height = (ROW_COUNT + 1) * SQUARESIZE
+        height = (ROW_COUNT+1) * SQUARESIZE
 
         size = (width, height)
 
-        RADIUS = int(SQUARESIZE / 2 - 5)
+        RADIUS = int(SQUARESIZE/2 - 5)
 
         screen = pygame.display.set_mode(size)
         draw_board(board)
         pygame.display.update()
 
-        myfont = pygame.font.SysFont("monospace", 75)
-
-        turn = random.randint(PLAYER, AI)
-
-
-
+        
 
         while not game_over:
 
@@ -330,15 +178,13 @@ def play():
                     sys.exit()
 
                 if event.type == pygame.MOUSEMOTION:
-                    pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
+                    pygame.draw.rect(screen, "#000814", (0,0, width, SQUARESIZE))
                     posx = event.pos[0]
-                    if turn == PLAYER:
-                        pygame.draw.circle(screen, BLUE, (posx, int(SQUARESIZE / 2)), RADIUS)
-
+                    if turn == 0:
+                        pygame.draw.circle(screen, YELLOW, (posx, int(SQUARESIZE/2)), RADIUS)
+                    else: 
+                        pygame.draw.circle(screen, green, (posx, int(SQUARESIZE/2)), RADIUS)
                 pygame.display.update()
-
-
-
 
                 if event.type == pygame.QUIT:
                     gameExit = True
@@ -346,10 +192,10 @@ def play():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         paused = True
-                        while paused:
+                        while paused:  
                             SCREEN.fill("#000814")
-                            message_to_screen("Paused", white, -120, size="large")
-                            message_to_screen("Press C to continue or Q to Quit", white, size="medium")
+                            message_to_screen("Paused", white, -100, size = "frostbite_")
+                            message_to_screen("Press C to continue or Q to Quit", white, size = "frost_")
                             for event in pygame.event.get():
                                 if event.type == pygame.QUIT:
                                     pygame.quit()
@@ -360,7 +206,7 @@ def play():
                                         pygame.display.update()
                                         clock.tick
                                         draw_board(board)
-                                        pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
+                                        pygame.draw.rect(screen, "#000814", (0, 0, width, SQUARESIZE))  
                                     elif event.key == pygame.K_q:
                                         pygame.quit()
                                         quit()
@@ -368,49 +214,37 @@ def play():
                                 pygame.display.update()
                                 clock.tick
 
-
-
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
-                    
-                    if turn == PLAYER:
+                    pygame.draw.rect(screen, "#000814", (0,0, width, SQUARESIZE))
+                    #print(event.pos)
+                    # Ask for Player 1 Input
+                    if turn == 0:
                         posx = event.pos[0]
-                        col = int(math.floor(posx / SQUARESIZE))
+                        col = int(math.floor(posx/SQUARESIZE))
 
                         if is_valid_location(board, col):
                             row = get_next_open_row(board, col)
-                            drop_piece(board, row, col, PLAYER_PIECE)
+                            drop_piece(board, row, col, 1)
 
-                            if winning_move(board, PLAYER_PIECE):
-                                label = get_font(45).render("Player 1 wins!!", True, YELLOW)
-                                screen.blit(label, (270, 30))
+                            if winning_move(board, 1):
+                                label = frostbite(35).render("Player 1 wins!!", True, white)
+                                screen.blit(label, (220, 30))
                                 game_over = True
 
-                            turn += 1
-                            turn = turn % 2
 
-                            print_board(board)
-                            draw_board(board)
+                    # # Ask for Player 2 Input
+                    else:				
+                        posx = event.pos[0]
+                        col = int(math.floor(posx/SQUARESIZE))
 
+                        if is_valid_location(board, col):
+                            row = get_next_open_row(board, col)
+                            drop_piece(board, row, col, 2)
 
-
-
-            
-            if turn == AI and not game_over:
-
-                
-                col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
-
-                if is_valid_location(board, col):
-                   
-                    row = get_next_open_row(board, col)
-                    drop_piece(board, row, col, AI_PIECE)
-
-                    if winning_move(board, AI_PIECE):
-                        label = get_font(45).render("Player 2 wins!!", True, YELLOW)
-                        screen.blit(label, (270, 30))
-                        game_over = True
+                            if winning_move(board, 2):
+                                label = frostbite(35).render("Player 2 wins!!", True, white)
+                                screen.blit(label, (220, 30))
+                                game_over = True
 
                     print_board(board)
                     draw_board(board)
@@ -418,34 +252,96 @@ def play():
                     turn += 1
                     turn = turn % 2
 
-            if game_over:
-                pygame.time.wait(3000)
+                    if game_over:
+                        pygame.time.wait(3000)
 
 
+def instructions():
+    while True:
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
+        SCREEN.fill("white")
+
+        OPTIONS_TEXT = medFont.render("How to Play Tic Tac Ball | Rules of Tic Tac Ball.", True, "#ca6702")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 50))
+        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
+
+        OPTION_TEXT = smallFont.render("OBJECTIVES:", True, "Black")
+        OPTION_RECT = OPTION_TEXT.get_rect(center=(110, 130))
+        SCREEN.blit(OPTION_TEXT, OPTION_RECT)
+
+        OPT_TEXT = my_font.render ("To be the first player to connect 4 of the same colored discs in a row (either", True, "Black")
+        OPT_RECT = OPT_TEXT.get_rect(center=(375, 165))
+        SCREEN.blit(OPT_TEXT, OPT_RECT)
+
+        OPT1_TEXT = my_font.render ("vertically, horizontally, or diagonally).", True, "Black")
+        OPT1_RECT = OPT1_TEXT.get_rect(center=(227, 185))
+        SCREEN.blit(OPT1_TEXT, OPT1_RECT)
+
+        OPT2_TEXT = smallFont.render("HOW TO PLAY:", True, "Black")
+        OPT2_RECT = OPT2_TEXT.get_rect(center=(115, 245))
+        SCREEN.blit(OPT2_TEXT, OPT2_RECT)
+
+        OPT3_TEXT = my_font.render ("- First, decide who goes first and what color each player will have.", True, "Black")
+        OPT3_RECT = OPT3_TEXT.get_rect(center=(335, 280))
+        SCREEN.blit(OPT3_TEXT, OPT3_RECT)
+
+        OPT4_TEXT = my_font.render ("- Players must alternate turns, and only one ball can be dropped in each turn. ", True, "Black")
+        OPT4_RECT = OPT4_TEXT.get_rect(center=(377, 305))
+        SCREEN.blit(OPT4_TEXT, OPT4_RECT)
+
+        OPT5_TEXT = my_font.render ("- On your turn, drop one of your colored balls from the top into any of the seven slots. ", True, "Black")
+        OPT5_RECT = OPT5_TEXT.get_rect(center=(418, 330))
+        SCREEN.blit(OPT5_TEXT, OPT5_RECT)
+
+        OPT6_TEXT = my_font.render ("- The game ends when there is a 4-in-a-row or a stalemate. ", True, "Black")
+        OPT6_RECT = OPT6_TEXT.get_rect(center=(299, 355))
+        SCREEN.blit(OPT6_TEXT, OPT6_RECT)
+
+        OPT7_TEXT = my_font.render ("- The starter of the previous game goes second on the next game. ", True, "Black")
+        OPT7_RECT = OPT7_TEXT.get_rect(center=(322, 375))
+        SCREEN.blit(OPT7_TEXT, OPT7_RECT)
+
+
+        OPTIONS_BACK = Button(image=None, pos=(400, 560), 
+                            text_input="BACK", font=medFont, base_color="Black", hovering_color="#ca6702")
+
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    main_menu()
+
+        pygame.display.update()
 
 def main_menu():
     while True:
-        SCREEN.blit(BG, (0, 0))
+        SCREEN.fill("#000814")
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(120).render("TicTac Ball", True, "#ca6702")
-        MENU_RECT = MENU_TEXT.get_rect(center=(400, 150))
+        MENU_TEXT = frostbite(70).render("TicTac Ball", True, "#ca6702")
+        MENU_RECT = MENU_TEXT.get_rect(center=(400, 140))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 340),
-                             text_input="PLAY", font=get_font(60), base_color="#d7fcd4", hovering_color="#6c757d")
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 490),
-                             text_input="QUIT", font=get_font(60), base_color="#d7fcd4", hovering_color="#6c757d")
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 310),
+                             text_input="Play", font=frostbite(35), base_color="#d7fcd4", hovering_color="#6c757d")
+        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 435),
+                             text_input="Instruction", font=frostbite(35), base_color="#d7fcd4", hovering_color="#6c757d")                    
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/option_s.png"), pos=(400, 560),
+                             text_input="Quit", font=frostbite(35), base_color="#d7fcd4", hovering_color="#6c757d")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
 
-
-        for button in [PLAY_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
-
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -453,6 +349,8 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     play()
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    instructions()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
